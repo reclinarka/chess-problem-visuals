@@ -149,7 +149,7 @@ class Board:
         }))
 
         self.raw_svg = svg
-        return svg
+        return self
 
     def __init__(self, n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off: bool = False):
         self.n = n
@@ -167,3 +167,30 @@ class Board:
 
     def _repr_svg_(self):
         return prepare_output(self.raw_svg, ipy_off=True)
+
+
+def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off=False, Qs: list = None,
+                        KnPs: list = None, K_path: list = None):
+    board = Board(n, SQUARE_SIZE, size, ipy_off)
+
+    if Qs:
+        for file_index, rank_index in enumerate(Qs):
+            if rank_index is None:
+                continue
+            board.add_piece((file_index, rank_index), "Q")
+    if KnPs:
+        assert isinstance(KnPs[0],
+                          tuple), "KnPs should be of format [ (knight_x,knight_y), [(pawn_1_x,pawn_2_y), ...] ]"
+        file_index, rank_index = KnPs[0]
+        board.add_piece((file_index, rank_index), "K")
+        for file_index, rank_index in KnPs[1]:
+            if rank_index is None:
+                continue
+            board.add_piece((file_index, rank_index), "p")
+        if K_path:
+            last_step = K_path[0]
+            assert isinstance(last_step, tuple), "A step should be a tuple of form (x,y)"
+            for step in K_path[1:]:
+                assert isinstance(step, tuple), "A step should be a tuple of form (x,y)"
+
+    return board
