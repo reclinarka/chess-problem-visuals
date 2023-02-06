@@ -34,7 +34,7 @@ Features <WIP>
 
     .. code:: python
 
-        >>> Board(9)
+        >>> Board(15)
         >>> test.add_piece((2,2),"k")
         >>> test.add_piece((2,3),"P")
 
