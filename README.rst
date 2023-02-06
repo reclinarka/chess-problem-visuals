@@ -1,12 +1,6 @@
 chess-problem-visuals: A python visualization tool for chess based Problems
 ========================================
-.. image:: https://github.com/niklasf/python-chess/workflows/Test/badge.svg
-    :target: https://github.com/niklasf/python-chess
-    :alt: Heavily inspried by
 
-.. image:: https://badge.fury.io/py/chess.svg
-    :target: https://pypi.python.org/pypi/chess
-    :alt: PyPI package
 
 Introduction
 ------------
