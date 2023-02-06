@@ -167,6 +167,10 @@ class Board:
     def present(self):
         return prepare_output(self.raw_svg, ipy_off=self.ipy_off, html_width=self.html_width)
 
+    def save_svg(self, file):
+        with open(file, "w") as f:
+            f.write(ET.tostring(self.raw_svg).decode("utf-8"))
+
 
 
 
@@ -183,7 +187,7 @@ def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy
         assert isinstance(KnPs[0],
                           tuple), "KnPs should be of format [ (knight_x,knight_y), [(pawn_1_x,pawn_2_y), ...] ]"
         file_index, rank_index = KnPs[0]
-        board.add_piece((file_index, rank_index), "K")
+        board.add_piece((file_index, rank_index), "N")
         for file_index, rank_index in KnPs[1]:
             if rank_index is None:
                 continue

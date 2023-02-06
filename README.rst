@@ -34,7 +34,7 @@ Features <WIP>
 
     .. code:: python
 
-        >>> paint_nxn_board(9)
+        >>> Board(9)
 
     .. image:: https://i.imgur.com/5OWDVxJ.png
         :alt: A 9x9 board
@@ -43,4 +43,4 @@ Features <WIP>
 
     .. code:: python
 
-        >>> paint_nxn_board(8,Qs=[])
+        >>> problem_board(8,Qs=[])
