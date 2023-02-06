@@ -149,6 +149,7 @@ class Board:
         }))
 
         self.raw_svg = svg
+        return svg
 
     def __init__(self, n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off: bool = False):
         self.n = n
