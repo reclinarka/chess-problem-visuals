@@ -20,7 +20,7 @@ Requires Python 3.7+. Download and install the latest release:
 
 ::
 
-    pip install pip install git+https://github.com/reclinarka/chess-problem-visuals
+    pip install git+https://github.com/reclinarka/chess-problem-visuals
 
 Documentation <WIP>
 -------------------
