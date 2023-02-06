@@ -162,7 +162,7 @@ class Board:
         self.raw_svg = create_base(n, SQUARE_SIZE, size)
 
     def _repr_html_(self):
-        return "<div style='width:{}'>{}</div>".format(self.html_width,prepare_output(self.raw_svg, ipy_off=True))
+        return "<div style='width:{}'>{}</div>".format(self.html_width, prepare_output(self.raw_svg, ipy_off=True))
 
     def present(self):
         return prepare_output(self.raw_svg)
@@ -172,8 +172,8 @@ class Board:
 
 
 def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off=False, Qs: list = None,
-                        KnPs: list = None, K_path: list = None):
-    board = Board(n, SQUARE_SIZE, size, ipy_off)
+                        KnPs: list = None, K_path: list = None, html_width: str = "25%"):
+    board = Board(n, SQUARE_SIZE, size, ipy_off, html_width)
 
     if Qs:
         for file_index, rank_index in enumerate(Qs):
