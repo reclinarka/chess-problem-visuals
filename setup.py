@@ -38,8 +38,7 @@ import chess_problem_visuals as chess
 
 def read_description():
     """
-    Reads the description from README.rst and substitutes mentions of the
-    latest version with a concrete version number.
+    Reads the description from README.rst
     """
     with open(os.path.join(os.path.dirname(__file__), "README.rst"), encoding="utf-8") as f:
         description = f.read()
@@ -59,17 +58,16 @@ setuptools.setup(
     long_description=read_description(),
     long_description_content_type="text/x-rst",
     license="GPL-3.0+",
-    keywords="chess fen epd pgn polyglot syzygy gaviota uci xboard",
-    url="https://github.com/niklasf/python-chess",
-    packages=["chess"],
+    keywords="chess problems visualization",
+    url="https://github.com/reclinarka/chess-problem-visuals",
+    packages=["chess_problem_visuals"],
     test_suite="test",
     zip_safe=False,  # For mypy
     package_data={
-        "chess": ["py.typed"],
+        "chess_problem_visuals": ["py.typed"],
     },
     python_requires=">=3.7",
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -85,8 +83,4 @@ setuptools.setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Typing :: Typed",
     ],
-    project_urls={
-        "Documentation": "https://python-chess.readthedocs.io",
-    },
-    obsoletes=["python_chess"],
 )
