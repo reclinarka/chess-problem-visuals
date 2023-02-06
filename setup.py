@@ -34,7 +34,7 @@ if sys.version_info < (3,):
 if sys.version_info < (3, 7):
     raise ImportError("Since version 1.0.0, python-chess requires Python 3.7 or later.")
 
-import chess_problem_visuals as chess
+import chess_problem_visuals as chess_problem_visuals
 
 def read_description():
     """
@@ -50,11 +50,11 @@ def read_description():
 
 
 setuptools.setup(
-    name="chess",
-    version=chess.__version__,
-    author=chess.__author__,
-    author_email=chess.__email__,
-    description=chess.__doc__.replace("\n", " ").strip(),
+    name="chess_problem_visuals",
+    version=chess_problem_visuals.__version__,
+    author=chess_problem_visuals.__author__,
+    author_email=chess_problem_visuals.__email__,
+    description=chess_problem_visuals.__doc__.replace("\n", " ").strip(),
     long_description=read_description(),
     long_description_content_type="text/x-rst",
     license="GPL-3.0+",

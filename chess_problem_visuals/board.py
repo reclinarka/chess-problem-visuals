@@ -151,16 +151,18 @@ class Board:
         self.raw_svg = svg
         return self
 
-    def __init__(self, n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off: bool = False):
+    def __init__(self, n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off: bool = False,
+                 html_width: str = "25%"):
         self.n = n
         self.SQUARE_SIZE = SQUARE_SIZE
         self.size = size
         self.ipy_off = ipy_off
+        self.html_width = html_width
         self.scale = SQUARE_SIZE / 45
         self.raw_svg = create_base(n, SQUARE_SIZE, size)
 
     def _repr_html_(self):
-        return prepare_output(self.raw_svg, ipy_off=True)
+        return "<div style='width:{}'>{}</div>".format(self.html_width,prepare_output(self.raw_svg, ipy_off=True))
 
     def present(self):
         return prepare_output(self.raw_svg)
