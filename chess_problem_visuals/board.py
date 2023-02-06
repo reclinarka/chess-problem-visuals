@@ -96,10 +96,10 @@ class SvgWrapper(str):
             f.write(self)
 
 
-def prepare_output(svg, ipy_off=False):
+def prepare_output(svg, ipy_off=False, html_width="25%"):
     svg = SvgWrapper(ET.tostring(svg).decode("utf-8"))
     if ipy_loaded and not ipy_off:
-        html_wrapper = f'<div style="width:25%">{svg}</div>'
+        html_wrapper = f'<div style="{html_width}">{svg}</div>'
         svg_widget = HTML(value=html_wrapper, layout=Layout(grid_area="top"))
         return svg_widget
     return svg
@@ -165,10 +165,9 @@ class Board:
         return "<div style='width:{}'>{}</div>".format(self.html_width, prepare_output(self.raw_svg, ipy_off=True))
 
     def present(self):
-        return prepare_output(self.raw_svg)
+        return prepare_output(self.raw_svg, ipy_off=self.ipy_off, html_width=self.html_width)
 
-    def _repr_svg_(self):
-        return prepare_output(self.raw_svg, ipy_off=True)
+
 
 
 def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off=False, Qs: list = None,
