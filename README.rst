@@ -35,12 +35,26 @@ Features <WIP>
     .. code:: python
 
         >>> Board(9)
+        >>> test.add_piece((2,2),"k")
+        >>> test.add_piece((2,3),"P")
 
-    .. image:: https://i.imgur.com/5OWDVxJ.png
+    .. image:: https://i.imgur.com/vJqYaMa.png
         :alt: A 9x9 board
 
 * N-Queens Problem
 
     .. code:: python
 
-        >>> problem_board(8,Qs=[])
+        >>> problem_board(10,Qs=[1,None,2,3])
+
+    .. image:: https://i.imgur.com/n8azSne.png
+        :alt: A 9x9 board
+
+* Knight Problem
+
+    .. code:: python
+
+        >>> problem_board(10,KnPs=[ (7,6), [ (2,2), (1,4), (5,9) ] ] )
+
+    .. image:: https://i.imgur.com/MCjGRj9.png
+        :alt: A 9x9 board
