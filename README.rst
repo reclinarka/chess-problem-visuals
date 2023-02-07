@@ -28,7 +28,7 @@ Features <WIP>
 
     .. code:: python
 
-        >>> Board(15)
+        >>> test = Board(15)
         >>> test.add_piece((2,2),"k")
         >>> test.add_piece((2,3),"P")
 
