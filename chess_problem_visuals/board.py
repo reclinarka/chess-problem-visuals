@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 import xml.etree.ElementTree as ET
+import math
 
 try:
     from ipywidgets import Layout, HTML
@@ -153,91 +154,57 @@ class Board:
 
     def add_arrow(self, tail, head):
         svg = self.raw_svg
+        SQUARE_SIZE = self.SQUARE_SIZE
 
         tail_file, tail_rank = tail
         head_file, head_rank = head
 
-        rank_delta = tail_rank - head_rank
-        file_delta = tail_file - head_file
-
-        xhead = (head_file + 0.5) * self.SQUARE_SIZE
-        yhead = (head_rank + 0.5) * self.SQUARE_SIZE
-
-        xtail = (tail_file + 0.5) * self.SQUARE_SIZE
-        ytail = (tail_rank + 0.5) * self.SQUARE_SIZE
-        # calculating corner point and arrow head polygon
-        # definitely optimize-able through better math, avoiding nested ifs: TODO
-        if abs(rank_delta) > 1:
-            # vertical arrow
-            corner_rank = head_rank
-            corner_file = tail_file
-
-            if file_delta < 0:
-                # right arrow
-                head_points = [
-                    (xhead, yhead),
-                    (head_file, head_rank),
-                    (head_file, head_rank + 1)
-                ]
-            else:
-                # left arrow
-                head_points = [
-                    (xhead, yhead),
-                    (head_file + 1, head_rank),
-                    (head_file + 1, head_rank + 1)
-                ]
+        if abs(tail_rank-head_rank) + abs(tail_file-head_file) != 3:
+            color = "red"
         else:
-            # horizontal arrow
-            corner_rank = tail_rank
-            corner_file = head_file
+            color = "white"
 
-            if rank_delta > 0:
-                # up arrow
-                head_points = [
-                    (xhead, yhead),
-                    (head_file, head_rank + 1),
-                    (head_file + 1, head_rank + 1)
-                ]
-            else:
-                # down arrow
-                head_points = [
-                    (xhead, yhead),
-                    (head_file, head_rank),
-                    (head_file + 1, head_rank)
-                ]
-        xcorner = (corner_file + 0.5) * self.SQUARE_SIZE
-        ycorner = (corner_rank + 0.5) * self.SQUARE_SIZE
+        xtail = (tail_file + 0.5) * SQUARE_SIZE
+        ytail = (tail_rank + 0.5) * SQUARE_SIZE
+        xhead = (head_file + 0.5) * SQUARE_SIZE
+        yhead = (head_rank + 0.5) * SQUARE_SIZE
 
-        head_points = [head_points[0]] + [(file * self.SQUARE_SIZE, rank * self.SQUARE_SIZE) for file, rank in
-                                          head_points[1:]]
+        marker_size = 0.75 * SQUARE_SIZE
+        marker_margin = 0.1 * SQUARE_SIZE
+
+        dx, dy = xhead - xtail, yhead - ytail
+        hypot = math.hypot(dx, dy)
+
+        shaft_x = xhead - dx * (marker_size + marker_margin) / hypot
+        shaft_y = yhead - dy * (marker_size + marker_margin) / hypot
+
+        xtip = xhead - dx * marker_margin / hypot
+        ytip = yhead - dy * marker_margin / hypot
 
         ET.SubElement(svg, "line", attrs_f({
             "x1": xtail,
             "y1": ytail,
-            "x2": xcorner,
-            "y2": ycorner,
-            "stroke": "white",
-            "stroke-width": self.SQUARE_SIZE * 0.2,
+            "x2": shaft_x,
+            "y2": shaft_y,
+            "stroke": color,
+            "stroke-width": SQUARE_SIZE * 0.2,
             "stroke-linecap": "butt",
             "class": "arrow",
         }))
 
-        ET.SubElement(svg, "line", attrs_f({
-            "x1": xhead,
-            "y1": yhead,
-            "x2": xcorner,
-            "y2": ycorner,
-            "stroke": "white",
-            "stroke-width": self.SQUARE_SIZE * 0.2,
-            "stroke-linecap": "butt",
-            "class": "arrow",
-        }))
+        marker = [(xtip, ytip),
+                  (shaft_x + dy * 0.5 * marker_size / hypot,
+                   shaft_y - dx * 0.5 * marker_size / hypot),
+                  (shaft_x - dy * 0.5 * marker_size / hypot,
+                   shaft_y + dx * 0.5 * marker_size / hypot)]
 
         ET.SubElement(svg, "polygon", attrs_f({
-            "points": " ".join(f"{x},{y}" for x, y in head_points),
-            "fill": "white",
+            "points": " ".join(f"{x},{y}" for x, y in marker),
+            "fill": color,
             "class": "arrow",
         }))
+
+        return self
 
         return self
 
