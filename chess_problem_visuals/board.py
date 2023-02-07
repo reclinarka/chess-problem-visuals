@@ -152,7 +152,7 @@ class Board:
         self.raw_svg = svg
         return self
 
-    def add_arrow(self, tail, head):
+    def add_arrow(self, tail, head, default_color="white"):
         svg = self.raw_svg
         SQUARE_SIZE = self.SQUARE_SIZE
 
@@ -162,7 +162,7 @@ class Board:
         if abs(tail_rank-head_rank) + abs(tail_file-head_file) != 3:
             color = "red"
         else:
-            color = "white"
+            color = default_color
 
         xtail = (tail_file + 0.5) * SQUARE_SIZE
         ytail = (tail_rank + 0.5) * SQUARE_SIZE
@@ -187,16 +187,16 @@ class Board:
             "x2": shaft_x,
             "y2": shaft_y,
             "stroke": color,
-            "stroke-width": SQUARE_SIZE * 0.2,
+            "stroke-width": SQUARE_SIZE * 0.1,
             "stroke-linecap": "butt",
             "class": "arrow",
         }))
 
         marker = [(xtip, ytip),
-                  (shaft_x + dy * 0.5 * marker_size / hypot,
-                   shaft_y - dx * 0.5 * marker_size / hypot),
-                  (shaft_x - dy * 0.5 * marker_size / hypot,
-                   shaft_y + dx * 0.5 * marker_size / hypot)]
+                  (shaft_x + dy * 0.2 * marker_size / hypot,
+                   shaft_y - dx * 0.2 * marker_size / hypot),
+                  (shaft_x - dy * 0.2 * marker_size / hypot,
+                   shaft_y + dx * 0.2 * marker_size / hypot)]
 
         ET.SubElement(svg, "polygon", attrs_f({
             "points": " ".join(f"{x},{y}" for x, y in marker),
@@ -230,7 +230,7 @@ class Board:
 
 
 def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off=False, Qs: list = None,
-                        KnPs: list = None, K_path: list = None, html_width: str = "25%"):
+                        K_start: tuple = (0,0), K_path: list = None, html_width: str = "25%", arrow_color= "white"):
     board = Board(n, SQUARE_SIZE, size, ipy_off, html_width)
 
     if Qs:
@@ -238,21 +238,22 @@ def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy
             if rank_index is None:
                 continue
             board.add_piece((file_index, rank_index), "Q")
-    if KnPs:
-        assert isinstance(KnPs[0],
-                          tuple), "KnPs should be of format [ (knight_x,knight_y), [(pawn_1_x,pawn_2_y), ...] ]"
-        file_index, rank_index = KnPs[0]
+    if K_start:
+        '''
+        Knight tour Problem:
+            A Knight is placed somewhere on th
+        '''
+        assert isinstance(K_start,
+                          tuple), "K_start should be of format (knight_x,knight_y)"
+        file_index, rank_index = K_start
         board.add_piece((file_index, rank_index), "N")
-        for file_index, rank_index in KnPs[1]:
-            if rank_index is None:
-                continue
-            board.add_piece((file_index, rank_index), "p")
+
         if K_path and len(K_path) > 1:
             last_step = K_path[0]
             assert isinstance(last_step, tuple), "A step should be a tuple of form (x,y)"
             for step in K_path[1:]:
                 assert isinstance(step, tuple), "A step should be a tuple of form (x,y)"
-                board.add_arrow(last_step, step)
+                board.add_arrow(last_step, step, default_color= arrow_color)
                 last_step = step
 
     return board
