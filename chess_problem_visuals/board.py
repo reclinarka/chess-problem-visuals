@@ -151,6 +151,96 @@ class Board:
         self.raw_svg = svg
         return self
 
+    def add_arrow(self, tail, head):
+        svg = self.raw_svg
+
+        tail_file, tail_rank = tail
+        head_file, head_rank = head
+
+        rank_delta = tail_rank - head_rank
+        file_delta = tail_file - head_file
+
+        xhead = (head_file + 0.5) * self.SQUARE_SIZE
+        yhead = (head_rank + 0.5) * self.SQUARE_SIZE
+
+        xtail = (tail_file + 0.5) * self.SQUARE_SIZE
+        ytail = (tail_rank + 0.5) * self.SQUARE_SIZE
+        # calculating corner point and arrow head polygon
+        # definitely optimize-able through better math, avoiding nested ifs: TODO
+        if abs(rank_delta) > 1:
+            # vertical arrow
+            corner_rank = head_rank
+            corner_file = tail_file
+
+            if file_delta < 0:
+                # right arrow
+                head_points = [
+                    (xhead, yhead),
+                    (head_file, head_rank),
+                    (head_file, head_rank + 1)
+                ]
+            else:
+                # left arrow
+                head_points = [
+                    (xhead, yhead),
+                    (head_file + 1, head_rank),
+                    (head_file + 1, head_rank + 1)
+                ]
+        else:
+            # horizontal arrow
+            corner_rank = tail_rank
+            corner_file = head_file
+
+            if rank_delta > 0:
+                # up arrow
+                head_points = [
+                    (xhead, yhead),
+                    (head_file, head_rank + 1),
+                    (head_file + 1, head_rank + 1)
+                ]
+            else:
+                # down arrow
+                head_points = [
+                    (xhead, yhead),
+                    (head_file, head_rank),
+                    (head_file + 1, head_rank)
+                ]
+        xcorner = (corner_file + 0.5) * self.SQUARE_SIZE
+        ycorner = (corner_rank + 0.5) * self.SQUARE_SIZE
+
+        head_points = [head_points[0]] + [(file * self.SQUARE_SIZE, rank * self.SQUARE_SIZE) for file, rank in
+                                          head_points[1:]]
+
+        ET.SubElement(svg, "line", attrs_f({
+            "x1": xtail,
+            "y1": ytail,
+            "x2": xcorner,
+            "y2": ycorner,
+            "stroke": "white",
+            "stroke-width": self.SQUARE_SIZE * 0.2,
+            "stroke-linecap": "butt",
+            "class": "arrow",
+        }))
+
+        ET.SubElement(svg, "line", attrs_f({
+            "x1": xhead,
+            "y1": yhead,
+            "x2": xcorner,
+            "y2": ycorner,
+            "stroke": "white",
+            "stroke-width": self.SQUARE_SIZE * 0.2,
+            "stroke-linecap": "butt",
+            "class": "arrow",
+        }))
+
+        ET.SubElement(svg, "polygon", attrs_f({
+            "points": " ".join(f"{x},{y}" for x, y in head_points),
+            "fill": "white",
+            "class": "arrow",
+        }))
+
+        return self
+
     def __init__(self, n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off: bool = False,
                  html_width: str = "25%"):
         self.n = n
@@ -172,8 +262,6 @@ class Board:
             f.write(ET.tostring(self.raw_svg).decode("utf-8"))
 
 
-
-
 def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off=False, Qs: list = None,
                         KnPs: list = None, K_path: list = None, html_width: str = "25%"):
     board = Board(n, SQUARE_SIZE, size, ipy_off, html_width)
@@ -192,10 +280,12 @@ def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy
             if rank_index is None:
                 continue
             board.add_piece((file_index, rank_index), "p")
-        if K_path:
+        if K_path and len(K_path) > 1:
             last_step = K_path[0]
             assert isinstance(last_step, tuple), "A step should be a tuple of form (x,y)"
             for step in K_path[1:]:
                 assert isinstance(step, tuple), "A step should be a tuple of form (x,y)"
+                board.add_arrow(last_step, step)
+                last_step = step
 
     return board
