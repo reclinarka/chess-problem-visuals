@@ -48,7 +48,7 @@ Features <WIP>
 
     .. code:: python
 
-        >>> problem_board(10,KnPs=[ (7,6), [ (2,2), (1,4), (5,9) ] ] )
+        >>> problem_board(10,KnPs=[ (7,6), [ (2,2), (1,4), (5,9) ] ], K_path=[(7,6),(8,8),(6,7),(5,9)] )
 
-    .. image:: https://i.imgur.com/MCjGRj9.png
+    .. image:: https://i.imgur.com/dMaXX77.png
         :alt: A 9x9 board
