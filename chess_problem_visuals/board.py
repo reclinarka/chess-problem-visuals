@@ -152,14 +152,14 @@ class Board:
         self.raw_svg = svg
         return self
 
-    def add_arrow(self, tail, head, default_color="white"):
+    def add_arrow(self, tail, head, default_color="white", arrow_width=1):
         svg = self.raw_svg
         SQUARE_SIZE = self.SQUARE_SIZE
 
         tail_file, tail_rank = tail
         head_file, head_rank = head
 
-        if abs(tail_rank-head_rank) + abs(tail_file-head_file) != 3:
+        if abs(tail_rank - head_rank) + abs(tail_file - head_file) != 3:
             color = "red"
         else:
             color = default_color
@@ -187,16 +187,16 @@ class Board:
             "x2": shaft_x,
             "y2": shaft_y,
             "stroke": color,
-            "stroke-width": SQUARE_SIZE * 0.1,
+            "stroke-width": SQUARE_SIZE * 0.2 * arrow_width,
             "stroke-linecap": "butt",
             "class": "arrow",
         }))
 
         marker = [(xtip, ytip),
-                  (shaft_x + dy * 0.2 * marker_size / hypot,
-                   shaft_y - dx * 0.2 * marker_size / hypot),
-                  (shaft_x - dy * 0.2 * marker_size / hypot,
-                   shaft_y + dx * 0.2 * marker_size / hypot)]
+                  (shaft_x + dy * 0.5 * arrow_width * marker_size / hypot,
+                   shaft_y - dx * 0.5 * arrow_width * marker_size / hypot),
+                  (shaft_x - dy * 0.5 * arrow_width * marker_size / hypot,
+                   shaft_y + dx * 0.5 * arrow_width * marker_size / hypot)]
 
         ET.SubElement(svg, "polygon", attrs_f({
             "points": " ".join(f"{x},{y}" for x, y in marker),
@@ -230,7 +230,8 @@ class Board:
 
 
 def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off=False, Qs: list = None,
-                        K_start: tuple = (0,0), K_path: list = None, html_width: str = "25%", arrow_color= "white"):
+                        K_start: tuple = (0, 0), K_path: list = None, html_width: str = "25%", arrow_color="white",
+                        arrow_width=1):
     board = Board(n, SQUARE_SIZE, size, ipy_off, html_width)
 
     if Qs:
@@ -253,7 +254,7 @@ def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy
             assert isinstance(last_step, tuple), "A step should be a tuple of form (x,y)"
             for step in K_path[1:]:
                 assert isinstance(step, tuple), "A step should be a tuple of form (x,y)"
-                board.add_arrow(last_step, step, default_color= arrow_color)
+                board.add_arrow(last_step, step, default_color=arrow_color, arrow_width=arrow_width)
                 last_step = step
 
     return board
