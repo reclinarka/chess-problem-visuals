@@ -24,7 +24,7 @@ __author__ = "Philipp Polland"
 
 __email__ = "contact@philipp-polland.dev"
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 from chess_problem_visuals.board import Board as Board
 from chess_problem_visuals.board import paint_problem_board as problem_board
