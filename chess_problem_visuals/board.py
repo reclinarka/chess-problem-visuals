@@ -230,7 +230,7 @@ class Board:
 
 
 def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy_off=False, Qs: list = None,
-                        K_start: tuple = (0, 0), K_path: list = None, html_width: str = "25%", arrow_color="white",
+                        K_start: tuple = None, K_path: list = None, html_width: str = "25%", arrow_color="white",
                         arrow_width=1):
     board = Board(n, SQUARE_SIZE, size, ipy_off, html_width)
 
