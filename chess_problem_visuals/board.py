@@ -258,3 +258,30 @@ def paint_problem_board(n: int = 8, SQUARE_SIZE: int = 16, size: int = None, ipy
                 last_step = step
 
     return board
+
+
+def knight_tour(n: int, K_start: tuple, K_path: list,
+                html_width="25%", SQUARE_SIZE: int = 16, size: int = None, ipy_off=False, arrow_color="white",
+                arrow_width=1):
+    visited = []
+
+    while len(K_path) > 0:
+        board = Board(n=n, SQUARE_SIZE=SQUARE_SIZE, size=size, ipy_off=ipy_off,
+                      html_width=html_width, arrow_width= arrow_width, arrow_color=arrow_color)
+        board.add_piece(K_start, "N")
+
+        visited.append(K_start)
+
+        for rank in range(n):
+            for file in range(n):
+                pos = (file, rank)
+                if pos not in visited:
+                    board.add_piece(pos, "p")
+
+        last_point = K_start
+        for point in K_path:
+            board.add_arrow(last_point, point, arrow_color)
+
+        K_start = K_path[0]
+        K_path = K_path[1:]
+        yield board
